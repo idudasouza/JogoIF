@@ -1,8 +1,9 @@
-#CUIDADO QUALQUER ALTERAÇÃO FODE COM TUDO
+#CUIDADO
 
 import pygame
 from pygame.locals import QUIT
 import sys
+import random
 
 
 class Jogador(pygame.sprite.Sprite):
@@ -21,8 +22,8 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.y = y
 
         # Velocidades
-        self.velocidadeL = 5
-        self.velocidadeR = 5
+        self.velocidadeL = 10
+        self.velocidadeR = 10
         self.salto = 10
 
         self.on_ground = False
@@ -34,6 +35,10 @@ class Jogador(pygame.sprite.Sprite):
         self.animate = False
         self.flip = False
         self.colidindo = False
+
+        # Pontos
+        self.sanidade = random.randint(20, 80)
+        self.dinheiro = random.randint(10, 100)
 
     def carregar_sprites(self):
         self.sprites.append(pygame.image.load('sprite_0.png'))
@@ -57,12 +62,12 @@ class Jogador(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
                 self.flip = True
 
-        if direcao == 'n' or self.colidindo == True:
+        if direcao == 'n' or self.colidindo == True or self.pulando == True:
             self.animate = False
             self.current_sprite = 0
         else:
             self.animate = True
-      
+
 def movimento():
     if pygame.key.get_pressed()[pygame.K_LEFT]:
         direcao = 'l'

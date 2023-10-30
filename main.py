@@ -1,8 +1,8 @@
 import pygame
-from pulo import pulo
-from bibliotecas import movimento, sair, animar
+from função import sair
 from colisão import colisao
-from var import personagem, tela, player_group, all_blocks, fundo1, clock, current_phase
+from var import personagem, player_group, grupofase1, clock, current_phase
+from personagem import movimento, animar
 from fases import fase
 
 pygame.init()
@@ -14,10 +14,8 @@ while True:
     direcao = movimento()
     personagem.mover(direcao)
     animar(personagem)
-    pulo(personagem)
-    colisao(player_group, all_blocks)
-    
-    tela.blit(fundo1, (0, 0))
+    personagem.pulo()
+    colisao(player_group, grupofase1)
 
     current_phase = fase(current_phase)
 

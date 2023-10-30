@@ -39,6 +39,7 @@ def fase(current_phase):
     elif var.faseAtual == 4:
       var.faseAtual = 1
     tela.blit(var.san, (520, 5))
+
     tela.blit(var.din, (520, 20))
     tela.blit(var.no, (520, 35))
 

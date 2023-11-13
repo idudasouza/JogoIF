@@ -38,10 +38,9 @@ def fase(current_phase):
       fase3()
     elif var.faseAtual == 4:
       var.faseAtual = 1
-    tela.blit(var.san, (520, 5))
-
-    tela.blit(var.din, (520, 20))
-    tela.blit(var.no, (520, 35))
+    tela.blit(var.san, (580, 5))
+    tela.blit(var.din, (580, 20))
+    tela.blit(var.no, (580, 35))
 
     pygame.display.flip()
 
@@ -127,26 +126,15 @@ def fase2():
           var.parte = 1
           var.questaoAtual = 0
           var.recuperacao = True
-        var.Nota = 100
+          var.Nota = 100
         var.nota = f"nota: {var.Nota}/100"
         var.no = fontemenor.render(var.nota, True, (255, 255, 255))
       else:
         var.questaoAtual += 3
         var.questao_atualizada = False
 
-  alternativaA = botao1
-  A_rect = botao1.get_rect()
-  A_rect.topleft = (55, 300)
-
-  alternativaB = botao1
-  B_rect = botao1.get_rect()
-  B_rect.topright = (645, 300)
-
   tela.blit(fundo2, (0, 0))
   grupofase1.empty()
-
-  tela.blit(alternativaA, A_rect.topleft)
-  tela.blit(alternativaB, B_rect.topleft)
 
   questao = None
   rA = None
@@ -155,24 +143,46 @@ def fase2():
     questao = questoesGerais[var.questaoAtual]
     rA = respostasgeraisA[var.questaoAtual]
     rB = respostasgeraisB[var.questaoAtual]
+    linhas = questao.split('\n')
+    pergunta = [fontemedia.render(linha, True, (150, 0, 0)) for linha in linhas]
+    linhasa = rA.split('\n')
+    respostaA = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasa]
+    linhasb = rB.split('\n')
+    respostaB = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasb]
   if var.parte == 2:
     questao = questoes[var.questaoAtual]
     rA = respostasA[var.questaoAtual]
     rB = respostasB[var.questaoAtual]
-  pergunta = fontemedia.render(questao, True, (0, 0, 0))
-  tela.blit(pergunta, (55, 100))
+    linhas = questao.split('\n')
+    pergunta = [fontemedia.render(linha, True, (150, 0, 0)) for linha in linhas]
+    linhasa = rA.split('\n')
+    respostaA = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasa]
+    linhasb = rB.split('\n')
+    respostaB = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasb]
 
-  A = fontemedia.render(rA, True, (0, 0, 0))
-  tela.blit(A, (A_rect.topleft))
+  
+  for linha in pergunta:
+    tela.blit(linha, (var.pos_x, var.pos_y))
+    var.pos_y += 30
+  for linha in respostaA:
+    tela.blit(linha, (var.pos_x2, var.pos_y2))
+    var.pos_y2 += 30
+    A_rect = linha.get_rect()
+    A_rect.topleft = (10, 150)
+  for linha in respostaB:
+    tela.blit(linha, (var.pos_x3, var.pos_y3))
+    var.pos_y3 += 30
+    B_rect = linha.get_rect()
+    B_rect.topleft = (10, 250)
 
-  B = fontemedia.render(rB, True, (0, 0, 0))
-  tela.blit(B, (B_rect.topleft))
+  var.pos_y = 50
+  var.pos_y2 = 150
+  var.pos_y3 = 250
 
   mouse_x, mouse_y = pygame.mouse.get_pos()
   mouse_pressed = pygame.mouse.get_pressed()[0]
 
-  if A_rect.collidepoint(
-      mouse_x, mouse_y) and mouse_pressed and not var.mouse_button_pressed:
+  if A_rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not var.mouse_button_pressed:
     if not var.questao_atualizada:
       var.questao_atualizada = True
     if var.parte == 1:
@@ -195,7 +205,7 @@ def fase2():
           conferir('errado')
         if var.questaoAtual == 7:
           conferir('certo')
-      elif var.resposta == 'mecanica':
+      else:
         if var.questaoAtual == 2:
           conferir('errado')
         if var.questaoAtual == 5:
@@ -203,8 +213,7 @@ def fase2():
         if var.questaoAtual == 8:
           conferir('certo')
     var.mouse_button_pressed = True
-  if B_rect.collidepoint(
-      mouse_x, mouse_y) and mouse_pressed and not var.mouse_button_pressed:
+  if B_rect.collidepoint(mouse_x, mouse_y) and mouse_pressed and not var.mouse_button_pressed:
     if not var.questao_atualizada:
       var.questao_atualizada = True
     if var.parte == 1:

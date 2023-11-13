@@ -3,12 +3,12 @@ import time
 from personagem import Jogador
 pygame.font.init()
 
-tela = pygame.display.set_mode((700, 500))
+tela = pygame.display.set_mode((700, 500), pygame.SRCALPHA)
 clock = pygame.time.Clock()
 
-fonte = pygame.font.Font("Pixels.ttf", 75)
-fontemenor = pygame.font.Font("Pixels.ttf", 35)
-fontemedia = pygame.font.Font("Pixels.ttf", 55)
+fonte = pygame.font.Font("Pixels.ttf", 55)
+fontemenor = pygame.font.Font("Pixels.ttf", 12)
+fontemedia = pygame.font.Font("Pixels.ttf", 23)
 
 # Fase 1
 
@@ -32,7 +32,8 @@ class Caixa(pygame.sprite.Sprite):
     global Nota, no, nota, start
     if self.rect.collidepoint(mouse_pos) and self.image.get_at((0, 0)) == amarelo and start:
       self.image.fill(verde)
-      Nota += 1
+      if Nota < 100:
+        Nota += 1
       nota = f"nota: {Nota}/100"
       no = fontemenor.render(nota, True, (255, 255, 255))
 
@@ -48,10 +49,10 @@ class QuadradoReset(pygame.sprite.Sprite):
       global Nota, no, nota, start
       if self.rect.collidepoint(mouse_pos) and start:
         if Nota > 0:
-          Nota -= 1
+          Nota -= 2
         nota = f"nota: {Nota}/100"
         no = fontemenor.render(nota, True, (255, 255, 255))
-        time.sleep(0.5)
+        time.sleep(0.25)
 
 class inicio(pygame.sprite.Sprite):
   def __init__(self, x, y):
@@ -73,15 +74,45 @@ class inicio(pygame.sprite.Sprite):
         faseAtual = 4
 
 caixas = pygame.sprite.Group()
-inicio = inicio(30, 242)
 for i in range(100):
-    caixa = Caixa(50 + i * 5, 250)
-    quadrado_reset0 = QuadradoReset(50 + i * 5, 245)
-    quadrado_reset1 = QuadradoReset(50 + i * 5, 255)
+    caixa = Caixa(100 + i * 5, 450)
+    quadrado_reset0 = QuadradoReset(100 + i * 5, 445)
+    quadrado_reset1 = QuadradoReset(100 + i * 5, 455)
     caixas.add(caixa)
-    caixas.add(inicio)
     caixas.add(quadrado_reset0)
     caixas.add(quadrado_reset1)
+for i in range(80):
+  if i < 10 or i > 35:
+    caixa = Caixa(590, 450 - i * 5)
+    quadrado_reset0 = QuadradoReset(595, 450 - i * 5)
+    if i != 0 and i < 79:
+      quadrado_reset1 = QuadradoReset(585, 450 - i * 5)
+  caixas.add(caixa)
+  caixas.add(quadrado_reset0)
+  caixas.add(quadrado_reset1)
+for i in range(100):
+  quadrado_reset0 = QuadradoReset(100 + i * 5, 50)
+  if i < 98:
+    quadrado_reset1 = QuadradoReset(100 + i * 5, 60)
+    caixa = Caixa(100 + i * 5, 55)
+  caixas.add(caixa)
+  caixas.add(quadrado_reset0)
+  caixas.add(quadrado_reset1)
+for i in range(81):
+  if i < 20 or i > 50:
+    if i != 80:
+      caixa = Caixa(95, 450 - i * 5)
+    else:
+      caixa = QuadradoReset(95, 450 - i * 5)
+    quadrado_reset1 = QuadradoReset(90, 450 - i * 5)
+    if i < 79:
+      quadrado_reset0 = QuadradoReset(100, 450 - i * 5)
+  caixas.add(caixa)
+  caixas.add(quadrado_reset0)
+  caixas.add(quadrado_reset1)
+
+inicio = inicio(85, 442)
+caixas.add(inicio)
 
 class Porteiro(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -129,7 +160,7 @@ player_group = pygame.sprite.Group()
 player_group.add(personagem)
 
 faseAtual = 3
-Nota = 0
+Nota = 100
 current_phase = "jogo"
 sanidade = f"sanidade: {personagem.sanidade}/100"
 san = fontemenor.render(sanidade, True, (255,255,255))
@@ -144,7 +175,7 @@ botao = pygame.image.load("sprites/jogar.png")
 botao1 = pygame.image.load("sprites/botao1.png")
 botao1.set_alpha(128)
 
-botaoinstruir = botao
+botaoinstruir = pygame.image.load("sprites/instruir.png")
 botaoinstruir_rect = botao.get_rect()
 botaoinstruir_rect.topleft = (200, 200)
 comojogar = pygame.image.load('sprites/como jogar.png')
@@ -185,50 +216,49 @@ menu = pygame.image.load('sprites/menu.png')
 
 # Fase 2
 questoes = [
-  'aut 1',
+  '1. Em sua composicao os resistores \npodem ser:',
   'qui 1',
-  'mec 1',
-  'aut 2',
+  '1. Durante o processo de acabamento em \nusinagem, como são classificados os \nsulcos e os cavaques?',
+  '2. Qual circuito recebe em sua entrada uma \ntensão alternada e devolve em sua saída uma \ntensão continua?',
   'qui 2',
-  'mec 2',
-  'aut 3',
+  '2. Quais são os componentes obrigatórios em \num sistema pneumático?',
+  '3. A partida estrela triangulo e a soft \nstarter tem como função:',
   'qui 3',
-  'mec 3',
+  '3. A radiação eletromagnética de pequeno \ncomprimento de onda, produzida quando os életrons \nem alta velocidadecolidem com uma placa defletora de Tungstênio, é chamado de:',
 ]
 respostasA = [
-  'aut V',
+  'a- Metalico, ceramico e Bobinado',
   'qui V',
-  'mec F',
-  'aut V',
+  'a- Sulcos são classificados como \ntransversais e cavaques como longitudinais.',
+  'a- Retificador',
   'qui F',
-  'mec F',
-  'aut F',
+  'a- Admissão, Compressão, Explosão, Escape.',
+  'a- Controlar a velocidade do motor',
   'qui V',
-  'mec V',
+  'a- Radiação X',
 ]
 respostasB = [
-  'aut F',
+  'b- Bobinado, Metálico e de Carvão e Bobinado',
   'qui F',
-  'mec V',
-  'aut F',
+  'b- Sulcos são classificados como côncavos e \ncavaques como convexos.',
+  'b- Amplificador',
   'qui V',
-  'mec V',
-  'aut V',
+  'b- fonte, elemento de sinal, elemento de \ncomando, atuador.',
+  'b- Reduzir a corrente de partida do motor.',
   'qui F',
-  'mec F',
+  'b- Radiação Gama',
 ]
 questoesGerais = [
-  'Qual o planeta mais proximo do Sol?',
-  'Qual o maior oceano do mundo?'
+  '1. Qual o planeta mais próximo do Sol?',
+  '2. Qual o maior oceano do mundo?'
 ]
-
 respostasgeraisA = [
-  'marte',
-  'atlantico'
+  'a- marte',
+  'a- atlântico'
 ]
 respostasgeraisB = [
-  'mercurio',
-  'pacifico'
+  'b- mercúrio',
+  'b- pacífico'
 ]
 
 questaoAtual = 0
@@ -246,3 +276,7 @@ recuperacao = False
 
 nota1 = 0
 nota2 = 0
+
+pos_x, pos_y = 10, 50
+pos_x2, pos_y2 = 10, 150
+pos_x3, pos_y3 = 10, 250

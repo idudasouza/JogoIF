@@ -18,6 +18,6 @@ while True:
     colisao(player_group, grupofase1)
 
     current_phase = fase(current_phase)
-
+    
     pygame.display.update()
     clock.tick(60)

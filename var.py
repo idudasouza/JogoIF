@@ -1,5 +1,6 @@
 import pygame
 import time
+import math
 from personagem import Jogador
 pygame.font.init()
 
@@ -87,17 +88,23 @@ for i in range(80):
     quadrado_reset0 = QuadradoReset(595, 450 - i * 5)
     if i != 0 and i < 79:
       quadrado_reset1 = QuadradoReset(585, 450 - i * 5)
+  else:
+    caixa = Caixa(400, 450 - i * 5)
+    quadrado_reset1 = QuadradoReset(405, 450 - i * 5)
+    quadrado_reset0 = QuadradoReset(395, 450 - i * 5)
+  
   caixas.add(caixa)
   caixas.add(quadrado_reset0)
   caixas.add(quadrado_reset1)
 for i in range(100):
-  quadrado_reset0 = QuadradoReset(100 + i * 5, 50)
-  if i < 98:
-    quadrado_reset1 = QuadradoReset(100 + i * 5, 60)
-    caixa = Caixa(100 + i * 5, 55)
-  caixas.add(caixa)
-  caixas.add(quadrado_reset0)
-  caixas.add(quadrado_reset1)
+  if i > 58 or i < 22:
+    quadrado_reset0 = QuadradoReset(100 + i * 5, 50)
+    if i < 98:
+      quadrado_reset1 = QuadradoReset(100 + i * 5, 60)
+      caixa = Caixa(100 + i * 5, 55)
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
 for i in range(81):
   if i < 20 or i > 50:
     if i != 80:
@@ -107,8 +114,38 @@ for i in range(81):
     quadrado_reset1 = QuadradoReset(90, 450 - i * 5)
     if i < 79:
       quadrado_reset0 = QuadradoReset(100, 450 - i * 5)
+  else:
+    caixa = Caixa(145, 450 - i * 5)
+    quadrado_reset1 = QuadradoReset(140, 450 - i * 5)
+    quadrado_reset0 = QuadradoReset(150, 450 - i * 5)
+      
   caixas.add(caixa)
   caixas.add(quadrado_reset0)
+  caixas.add(quadrado_reset1)
+
+raio = 100
+center_x = 300
+center_y = 60
+numbloco = 70
+angle_increment = math.pi / numbloco
+
+for i in range(numbloco):
+  angle = i * angle_increment
+  ax = center_x + int(raio * math.cos(angle))
+  ay = center_y + int(raio * math.sin(angle))
+  caixa = Caixa(ax,ay)
+  caixas.add(caixa)
+for i in range(numbloco):
+  angle = i * angle_increment
+  ax = center_x + int((raio-5) * math.cos(angle))
+  ay = center_y + int((raio-5) * math.sin(angle))
+  quadrado_reset0 = QuadradoReset(ax,ay)
+  caixas.add(quadrado_reset0)
+for i in range(numbloco):
+  angle = i * angle_increment
+  ax = center_x + int((raio+5) * math.cos(angle))
+  ay = center_y + int((raio+5) * math.sin(angle))
+  quadrado_reset1 = QuadradoReset(ax,ay)
   caixas.add(quadrado_reset1)
 
 inicio = inicio(85, 442)

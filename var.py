@@ -11,6 +11,8 @@ fonte = pygame.font.Font("Pixels.ttf", 55)
 fontemenor = pygame.font.Font("Pixels.ttf", 12)
 fontemedia = pygame.font.Font("Pixels.ttf", 23)
 
+recuperacao = False
+
 # Fase 1
 
 fundo1 = pygame.image.load('sprites/fundo1.png')
@@ -20,7 +22,6 @@ start = False
 verde = (0, 255, 0)
 amarelo = (255, 255, 0)
 vermelho = (255, 0, 0)
-roxo = (200, 0, 255)
 class Caixa(pygame.sprite.Sprite):
   def __init__(self, x, y):
     super().__init__()
@@ -33,11 +34,11 @@ class Caixa(pygame.sprite.Sprite):
     global Nota, no, nota, start
     if self.rect.collidepoint(mouse_pos) and self.image.get_at((0, 0)) == amarelo and start:
       self.image.fill(verde)
-      if Nota < 100:
-        Nota += 1
+      if Nota <= 99.8:
+        Nota += 0.2
+      Nota = float("{:.2f}".format(Nota))
       nota = f"nota: {Nota}/100"
       no = fontemenor.render(nota, True, (255, 255, 255))
-
 class QuadradoReset(pygame.sprite.Sprite):
   def __init__(self, x, y):
       super().__init__()
@@ -49,12 +50,12 @@ class QuadradoReset(pygame.sprite.Sprite):
   def colidir_com_mouse(self, mouse_pos):
       global Nota, no, nota, start
       if self.rect.collidepoint(mouse_pos) and start:
-        if Nota > 0:
-          Nota -= 2
+        if Nota >= 0.2:
+          Nota -= 0.2
+        Nota = float("{:.2f}".format(Nota))
         nota = f"nota: {Nota}/100"
         no = fontemenor.render(nota, True, (255, 255, 255))
-        time.sleep(0.25)
-
+        time.sleep(0.01)
 class inicio(pygame.sprite.Sprite):
   def __init__(self, x, y):
     super().__init__()
@@ -62,94 +63,163 @@ class inicio(pygame.sprite.Sprite):
     self.image.fill(vermelho)
     self.rect = self.image.get_rect()
     self.rect.topleft = (x, y)
+    self.was_mouse_pressed = False
 
   def colidir_com_mouse(self, mouse_pos):
-    global start, faseAtual
+    global start, faseAtual, recuperacao, caixas, nota2, Nota
+    mouse_x, mouse_y = mouse_pos
+    is_mouse_pressed = pygame.mouse.get_pressed()[0]
     if self.rect.collidepoint(mouse_pos):
-      if pygame.mouse.get_pressed()[0] and not start:
+      if is_mouse_pressed and not self.was_mouse_pressed and not start:
         self.image.fill(verde)
         start = True
-      elif pygame.mouse.get_pressed()[0] and start:
+      elif is_mouse_pressed and not self.was_mouse_pressed and start:
         self.image.fill(vermelho)
         start = False
-        faseAtual = 4
-
-caixas = pygame.sprite.Group()
-for i in range(100):
-    caixa = Caixa(100 + i * 5, 450)
-    quadrado_reset0 = QuadradoReset(100 + i * 5, 445)
-    quadrado_reset1 = QuadradoReset(100 + i * 5, 455)
-    caixas.add(caixa)
-    caixas.add(quadrado_reset0)
-    caixas.add(quadrado_reset1)
-for i in range(80):
-  if i < 10 or i > 35:
-    caixa = Caixa(590, 450 - i * 5)
-    quadrado_reset0 = QuadradoReset(595, 450 - i * 5)
-    if i != 0 and i < 79:
-      quadrado_reset1 = QuadradoReset(585, 450 - i * 5)
-  else:
-    caixa = Caixa(400, 450 - i * 5)
-    quadrado_reset1 = QuadradoReset(405, 450 - i * 5)
-    quadrado_reset0 = QuadradoReset(395, 450 - i * 5)
-  
-  caixas.add(caixa)
-  caixas.add(quadrado_reset0)
-  caixas.add(quadrado_reset1)
-for i in range(100):
-  if i > 58 or i < 22:
-    quadrado_reset0 = QuadradoReset(100 + i * 5, 50)
-    if i < 98:
-      quadrado_reset1 = QuadradoReset(100 + i * 5, 60)
-      caixa = Caixa(100 + i * 5, 55)
-    caixas.add(caixa)
-    caixas.add(quadrado_reset0)
-    caixas.add(quadrado_reset1)
-for i in range(81):
-  if i < 20 or i > 50:
-    if i != 80:
-      caixa = Caixa(95, 450 - i * 5)
-    else:
-      caixa = QuadradoReset(95, 450 - i * 5)
-    quadrado_reset1 = QuadradoReset(90, 450 - i * 5)
-    if i < 79:
-      quadrado_reset0 = QuadradoReset(100, 450 - i * 5)
-  else:
-    caixa = Caixa(145, 450 - i * 5)
-    quadrado_reset1 = QuadradoReset(140, 450 - i * 5)
-    quadrado_reset0 = QuadradoReset(150, 450 - i * 5)
+        if Nota < 60 and recuperacao == False:
+          recuperacao = True
+          caixas.empty
+          caixas = create_boxes()
+          nota2 = Nota
+          Nota = 0
+        else:
+          if nota2 < Nota:
+            nota2 = Nota
+          faseAtual = 4
       
-  caixas.add(caixa)
-  caixas.add(quadrado_reset0)
-  caixas.add(quadrado_reset1)
+      self.was_mouse_pressed = is_mouse_pressed
 
-raio = 100
-center_x = 300
-center_y = 60
-numbloco = 70
-angle_increment = math.pi / numbloco
+def create_boxes():
+  caixas = pygame.sprite.Group()
+  for i in range(100):
+      caixa = Caixa(100 + i * 5, 450)
+      quadrado_reset0 = QuadradoReset(100 + i * 5, 445)
+      quadrado_reset1 = QuadradoReset(100 + i * 5, 455)
+      caixas.add(caixa)
+      caixas.add(quadrado_reset0)
+      caixas.add(quadrado_reset1)
+  for i in range(80):
+    if i < 10 or i > 35:
+      caixa = Caixa(590, 450 - i * 5)
+      quadrado_reset0 = QuadradoReset(595, 450 - i * 5)
+      if i != 0 and i < 79:
+        quadrado_reset1 = QuadradoReset(585, 450 - i * 5)
+    else:
+      caixa = Caixa(400, 450 - i * 5)
+      quadrado_reset1 = QuadradoReset(405, 450 - i * 5)
+      quadrado_reset0 = QuadradoReset(395, 450 - i * 5)
+    
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  for i in range(100):
+    if i > 58 or i < 22:
+      quadrado_reset0 = QuadradoReset(100 + i * 5, 50)
+      if i < 98:
+        quadrado_reset1 = QuadradoReset(100 + i * 5, 60)
+        caixa = Caixa(100 + i * 5, 55)
+      if i == 20:
+        quadrado_reset1 = Caixa(100 + i * 5, 60)
+      if i == 21 or i == 59:
+        caixa = QuadradoReset(100 + i * 5, 55)
+      caixas.add(caixa)
+      caixas.add(quadrado_reset0)
+      caixas.add(quadrado_reset1)
+  for i in range(81):
+    if i < 20 or i > 50:
+      if i != 80:
+        caixa = Caixa(95, 450 - i * 5)
+      else:
+        caixa = QuadradoReset(95, 450 - i * 5)
+      quadrado_reset1 = QuadradoReset(90, 450 - i * 5)
+      if i < 79:
+        quadrado_reset0 = QuadradoReset(100, 450 - i * 5)
+    else:
+      caixa = Caixa(145, 450 - i * 5)
+      quadrado_reset1 = QuadradoReset(140, 450 - i * 5)
+      quadrado_reset0 = QuadradoReset(150, 450 - i * 5)
+        
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  for i in range(11):
+    if i > 0:
+      quadrado_reset0 = QuadradoReset(100 + i * 5, 195)
+    quadrado_reset1 = QuadradoReset(90 + i * 5, 205)
+    if i != 0:
+      caixa = Caixa(90 + i * 5,200)
+    else:
+      caixa = QuadradoReset(90 + i * 5,200)
+    
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  for i in range(11):
+    if i > 0:
+      quadrado_reset0 = QuadradoReset(100 + i * 5, 355)
+    quadrado_reset1 = QuadradoReset(90 + i * 5, 345)
+    if i != 0:
+      caixa = Caixa(90 + i * 5,350)
+    else:
+      caixa = QuadradoReset(90 + i * 5,350)
+  
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  for i in range(39):
+    quadrado_reset0 = QuadradoReset(395 + i * 5, 405)
+    quadrado_reset1 = QuadradoReset(405 + i * 5, 395)
+    if i != 38:
+      caixa = Caixa(405 + i * 5, 400)
+    else:
+      caixa = QuadradoReset(405 + i * 5, 400)
+    
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  for i in range(39):
+    quadrado_reset0 = QuadradoReset(395 + i * 5, 270)
+    quadrado_reset1 = QuadradoReset(405 + i * 5, 280)
+    if i != 38:
+      caixa = Caixa(405 + i * 5, 275)
+    else:
+      caixa = QuadradoReset(405 + i * 5, 275)
+  
+    caixas.add(caixa)
+    caixas.add(quadrado_reset0)
+    caixas.add(quadrado_reset1)
+  
+  raio = 100
+  center_x = 300
+  center_y = 60
+  numbloco = 70
+  angle_increment = math.pi / numbloco
+  
+  for i in range(numbloco):
+    angle = i * angle_increment
+    ax = center_x + int(raio * math.cos(angle))
+    ay = center_y + int(raio * math.sin(angle))
+    caixa = Caixa(ax,ay)
+    caixas.add(caixa)
+  for i in range(numbloco):
+    angle = i * angle_increment
+    ax = center_x + int((raio-5) * math.cos(angle))
+    ay = center_y + int((raio-5) * math.sin(angle))
+    quadrado_reset0 = QuadradoReset(ax,ay)
+    caixas.add(quadrado_reset0)
+  for i in range(numbloco):
+    angle = i * angle_increment
+    ax = center_x + int((raio+5) * math.cos(angle))
+    ay = center_y + int((raio+5) * math.sin(angle))
+    quadrado_reset1 = QuadradoReset(ax,ay)
+    caixas.add(quadrado_reset1)
+  
+  inicio_instancia = inicio(85, 442)
+  caixas.add(inicio_instancia)
 
-for i in range(numbloco):
-  angle = i * angle_increment
-  ax = center_x + int(raio * math.cos(angle))
-  ay = center_y + int(raio * math.sin(angle))
-  caixa = Caixa(ax,ay)
-  caixas.add(caixa)
-for i in range(numbloco):
-  angle = i * angle_increment
-  ax = center_x + int((raio-5) * math.cos(angle))
-  ay = center_y + int((raio-5) * math.sin(angle))
-  quadrado_reset0 = QuadradoReset(ax,ay)
-  caixas.add(quadrado_reset0)
-for i in range(numbloco):
-  angle = i * angle_increment
-  ax = center_x + int((raio+5) * math.cos(angle))
-  ay = center_y + int((raio+5) * math.sin(angle))
-  quadrado_reset1 = QuadradoReset(ax,ay)
-  caixas.add(quadrado_reset1)
+  return caixas
 
-inicio = inicio(85, 442)
-caixas.add(inicio)
+caixas = create_boxes()
 
 class Porteiro(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -196,7 +266,7 @@ personagem = Jogador(0, 0)
 player_group = pygame.sprite.Group()
 player_group.add(personagem)
 
-faseAtual = 3
+faseAtual = 1
 Nota = 100
 current_phase = "jogo"
 sanidade = f"sanidade: {personagem.sanidade}/100"
@@ -308,8 +378,6 @@ resposta = ''
 fimfase = False
 
 questao_atualizada = False
-
-recuperacao = False
 
 nota1 = 0
 nota2 = 0

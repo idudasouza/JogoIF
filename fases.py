@@ -37,7 +37,7 @@ def fase(current_phase):
     elif var.faseAtual == 3:
       fase3()
     elif var.faseAtual == 4:
-      var.faseAtual = 1
+      tela.blit(fundo1, (0, 0))
     tela.blit(var.san, (580, 5))
     tela.blit(var.din, (580, 20))
     tela.blit(var.no, (580, 35))
@@ -46,7 +46,6 @@ def fase(current_phase):
 
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
       return "menu"
-
   elif current_phase == "instruir":
     tela.blit(comojogar, (0, 0))
     tela.blit(titulocomojogar, (320, 40))
@@ -57,7 +56,6 @@ def fase(current_phase):
       pos += 90
     if pygame.key.get_pressed()[pygame.K_ESCAPE]:
       return "menu"
-
   elif current_phase == "creditos":
     tela.blit(menu, (0, 0))
     tela.blit(creditos, (300, 50))
@@ -71,7 +69,6 @@ def fase(current_phase):
 
   return current_phase
 
-
 def fase1():
   global personagem
   personagem = Jogador(0, 0)
@@ -79,9 +76,7 @@ def fase1():
   grupofase1.draw(tela)
   player_group.draw(tela)
 
-
 def fase2():
-
   def conferir(certoOUerrado):
     if certoOUerrado == 'errado' and var.questao_atualizada:
       if var.Nota <= 0:
@@ -106,7 +101,6 @@ def fase2():
     elif var.parte == 2 and not var.fimfase and var.questao_atualizada:
       if var.questaoAtual == 6 or var.questaoAtual == 7 or var.questaoAtual == 8:
         if var.Nota >= 60 or var.recuperacao == True:
-          var.Nota = 0
           if var.Nota >= 80:
             personagem.sanidade += 10
             var.sanidade = f"sanidade: {personagem.sanidade}/100"
@@ -118,6 +112,8 @@ def fase2():
           if var.nota1 < var.Nota:
             var.nota1 = var.Nota
           var.faseAtual = 3
+          var.recuperacao = False
+          var.Nota = 0
         else:
           personagem.sanidade -= 10
           var.sanidade = f"sanidade: {personagem.sanidade}/100"
@@ -135,6 +131,9 @@ def fase2():
 
   tela.blit(fundo2, (0, 0))
   grupofase1.empty()
+  player_group.empty()
+
+  player_group.add(personagem)
 
   questao = None
   rA = None
@@ -159,7 +158,6 @@ def fase2():
     respostaA = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasa]
     linhasb = rB.split('\n')
     respostaB = [fontemedia.render(linha, True, (0, 0, 0)) for linha in linhasb]
-
   
   for linha in pergunta:
     tela.blit(linha, (var.pos_x, var.pos_y))
@@ -246,7 +244,6 @@ def fase2():
     var.mouse_button_pressed = True
   var.mouse_button_pressed = mouse_pressed
 
-
 def fase3():
   if var.resposta != 'quimica':
     tela.blit(fundo2, (0, 0))
@@ -254,4 +251,4 @@ def fase3():
     mouse_pos = pygame.mouse.get_pos()
     for caixa in var.caixas:
       if caixa.colidir_com_mouse(mouse_pos):
-        var.caixa.colidir_com_mouse(mouse_pos)
+        caixa.colidir_com_mouse(mouse_pos)

@@ -37,7 +37,7 @@ def colisao(jogadores, fase_atual):
 
 
   if col == 'porteiro':
-    texto = "Bem-vindo(a) ao jogo Torre IF!\nMas antes de iniciar, me diga,\nqual o seu curso?\nPressione a para automacao,\nm para mecanica ou q para quimica"
+    texto = "Bem-vindo ao jogo do IF!\nMas antes de iniciar, me diga,\nqual o seu curso?\nPressione a para automacao,\nm para mecanica ou q para quimica"
     linhas = texto.split('\n')
     pos_x, pos_y = 220, 150
     jogador.podemover = False
@@ -71,6 +71,3 @@ def colisao(jogadores, fase_atual):
     pygame.time.delay(2500)
     col = ''
     falou = True
-
-
-  

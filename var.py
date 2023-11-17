@@ -1,6 +1,8 @@
 import pygame
 import time
 import math
+import random
+import os
 from personagem import Jogador
 pygame.font.init()
 
@@ -88,7 +90,39 @@ class inicio(pygame.sprite.Sprite):
           faseAtual = 4
       
       self.was_mouse_pressed = is_mouse_pressed
+veneno = [pygame.image.load("sprites/red.png")]
+componentes = [pygame.image.load("sprites/yellow.png"), pygame.image.load("sprites/green.png")]
+posicoes_iniciais = [100, 300, 500]
+class Elementos(pygame.sprite.Sprite):
+  def __init__(self):
+      super().__init__()
+      self.image = random.choice(componentes)
+      self.rect = self.image.get_rect()
 
+  def update(self):
+    global Nota, no, nota
+    self.rect.y += 10
+    if self.rect.y > 500:
+        self.kill()
+    if self.rect.y >= 300 and self.rect.y <= 350:
+      if self.rect.x == posicoes_iniciais[0] and pygame.key.get_pressed()[pygame.K_LEFT]:
+        self.kill()
+        Nota += 1
+        nota = f"nota: {Nota}/100"
+        no = fontemenor.render(nota, True, (255, 255, 255))
+
+      if self.rect.x == posicoes_iniciais[1] and pygame.key.get_pressed()[pygame.K_DOWN]:
+        self.kill()
+        Nota += 1
+        nota = f"nota: {Nota}/100"
+        no = fontemenor.render(nota, True, (255, 255, 255))
+
+      if self.rect.x == posicoes_iniciais[2] and pygame.key.get_pressed()[pygame.K_RIGHT]:
+        self.kill()
+        Nota += 1
+        nota = f"nota: {Nota}/100"
+        no = fontemenor.render(nota, True, (255, 255, 255))
+          
 def create_boxes():
   caixas = pygame.sprite.Group()
   for i in range(100):
@@ -220,6 +254,42 @@ def create_boxes():
   return caixas
 
 caixas = create_boxes()
+class Veneno(pygame.sprite.Sprite):
+  def __init__(self):
+      super().__init__()
+      self.image = random.choice(veneno)
+      self.rect = self.image.get_rect()
+
+  def update(self):
+    global Nota, no, nota
+    self.rect.y += 15
+    if self.rect.y > 500:
+        self.kill()
+    if self.rect.y >= 300 and self.rect.y <= 350:
+      if self.rect.x == posicoes_iniciais[0] and pygame.key.get_pressed()[pygame.K_LEFT]:
+        self.kill()
+        if Nota >= 2:
+          Nota -= 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (255, 255, 255))
+
+      if self.rect.x == posicoes_iniciais[1] and pygame.key.get_pressed()[pygame.K_DOWN]:
+        self.kill()
+        if Nota >= 2:
+          Nota -= 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (255, 255, 255))
+        elif Nota >= 1:
+          Nota -= 1
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (255, 255, 255))
+
+      if self.rect.x == posicoes_iniciais[2] and pygame.key.get_pressed()[pygame.K_RIGHT]:
+        self.kill()
+        if Nota >= 2:
+          Nota -= 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (255, 255, 255))
 
 class Porteiro(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -259,15 +329,17 @@ class Porta(pygame.sprite.Sprite):
 porta = Porta(600, 330)
 
 grupofase1 = pygame.sprite.Group()
+      
 grupofase1.add(porteiro)
+          
 grupofase1.add(porta)
 
 personagem = Jogador(0, 0)
 player_group = pygame.sprite.Group()
 player_group.add(personagem)
 
-faseAtual = 1
-Nota = 100
+faseAtual = 3
+Nota = 0
 current_phase = "jogo"
 sanidade = f"sanidade: {personagem.sanidade}/100"
 san = fontemenor.render(sanidade, True, (255,255,255))
@@ -373,7 +445,7 @@ parte = 1
 
 mouse_button_pressed = False
 
-resposta = ''
+resposta = 'quimica'
 
 fimfase = False
 

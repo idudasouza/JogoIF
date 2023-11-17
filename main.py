@@ -2,7 +2,7 @@ import pygame
 import var
 from função import sair
 from colisão import colisao
-from var import personagem, player_group, grupofase1, clock, current_phase
+from var import personagem, player_group, grupofase1, clock, current_phase,tela
 from personagem import movimento, animar
 from fases import fase
 
@@ -17,7 +17,7 @@ while True:
   animar(personagem)
   personagem.pulo()
   colisao(var.player_group, grupofase1)
-
+  
   current_phase = fase(current_phase)
     
   pygame.display.update()

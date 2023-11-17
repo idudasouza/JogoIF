@@ -1,6 +1,8 @@
 import pygame
 from personagem import Jogador
 import var
+import time
+import random
 from var import tela, player_group, fundo1, menu, botao, botao_rect, botao1, botaoinstruir, botaocredito, botaoinstruir_rect, botaocredito_rect, creditos, fontemenor, creditostexto, comojogar, titulocomojogar, textocomojogar, personagem, grupofase1, fundo2, questoesGerais, fontemedia, respostasgeraisA, respostasgeraisB, questoes, respostasA, respostasB
 
 
@@ -37,7 +39,7 @@ def fase(current_phase):
     elif var.faseAtual == 3:
       fase3()
     elif var.faseAtual == 4:
-      tela.blit(fundo1, (0, 0))
+      fase1()
     tela.blit(var.san, (580, 5))
     tela.blit(var.din, (580, 20))
     tela.blit(var.no, (580, 35))
@@ -244,7 +246,18 @@ def fase2():
     var.mouse_button_pressed = True
   var.mouse_button_pressed = mouse_pressed
 
+grupo_sprites = pygame.sprite.Group()
+grupo_sprites2 = pygame.sprite.Group()
+last_element_time = 0
+max_elements = 100
+element_count = 0
+element_count2 = 0
+chance = 0
 def fase3():
+  global grupo_sprites, grupo_sprites2, last_element_time, max_element, element_count, element_count2, chance
+  fimfase = False
+  interval = random.choice([500, 1000, 2000])
+  current_time = pygame.time.get_ticks()
   if var.resposta != 'quimica':
     tela.blit(fundo2, (0, 0))
     var.caixas.draw(tela)
@@ -252,3 +265,35 @@ def fase3():
     for caixa in var.caixas:
       if caixa.colidir_com_mouse(mouse_pos):
         caixa.colidir_com_mouse(mouse_pos)
+
+  else:
+    tela.blit(fundo1, (0, 0))
+    grupo_sprites.draw(tela)
+    grupo_sprites2.draw(tela)
+    grupo_sprites.update()
+    grupo_sprites2.update()
+    if random.randint(1, 100) <= chance:
+      if current_time - last_element_time > interval:
+        sprite = var.Veneno()
+        sprite.rect.x = random.choice(var.posicoes_iniciais)
+        sprite.rect.y = 0
+        grupo_sprites2.add(sprite)
+
+    if current_time - last_element_time > interval and element_count < max_elements:
+      sprite = var.Elementos()
+      sprite.rect.x = random.choice(var.posicoes_iniciais)
+      sprite.rect.y = 0
+      grupo_sprites.add(sprite)
+      element_count += 1
+      chance += 2
+      last_element_time = current_time
+      
+    if len(grupo_sprites) == 0 and element_count == max_elements:
+      fimfase = True
+    if var.Nota <= 0 and not var.recuperacao and fimfase:
+      var.recuperacao = True
+      element_count = 0
+      chance = 0
+    elif fimfase:
+      var.recuperacao = False
+      var.faseAtual = 4

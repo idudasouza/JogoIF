@@ -15,14 +15,14 @@ class Jogador(pygame.sprite.Sprite):
         # Posição
         self.rect.x = x
         self.rect.y = y
-        self.chao = 455
+        self.chao = 350
 
         # Velocidades
         self.podemover = True
-        vel = 10
-        self.velocidadeL = vel
-        self.velocidadeR = vel
-        self.salto = vel
+        self.vel = 10
+        self.velocidadeL = self.vel
+        self.velocidadeR = self.vel
+        self.salto = self.vel
 
         self.on_ground = False
         self.pulando = False
@@ -61,7 +61,7 @@ class Jogador(pygame.sprite.Sprite):
             if not self.flip:
                 self.image = pygame.transform.flip(self.image, True, False)
                 self.flip = True
-        if direcao == 'n' or self.colidindo == True or self.pulando == True:
+        if direcao == 'n':
             self.animate = False
             self.current_sprite = 0
         else:
@@ -88,11 +88,13 @@ class Jogador(pygame.sprite.Sprite):
 
 def movimento():
     if pygame.key.get_pressed()[pygame.K_LEFT]:
-        direcao = 'l'
+      direcao = 'l'
     elif pygame.key.get_pressed()[pygame.K_RIGHT]:
-        direcao = 'r'
+      direcao = 'r'
+    elif pygame.key.get_pressed()[pygame.K_DOWN]:
+      direcao = 'd'
     else:
-        direcao = 'n'
+      direcao = 'n'
     return direcao
 
 def animar(jogador):

@@ -19,6 +19,12 @@ recuperacao = False
 
 fundo1 = pygame.image.load('sprites/fundo1.png')
 fundo2 = pygame.image.load('sprites/fundo2.png')
+dt = pygame.image.load('sprites/dt.png')
+qui = pygame.image.load('sprites/qui.png')
+refeitorio1 = pygame.image.load('sprites/refeitorio1.png')
+refeitorio2 = pygame.image.load('sprites/refeitorio2.png')
+fundo = pygame.image.load('sprites/tela.png')
+
 
 start = False
 verde = (0, 255, 0)
@@ -36,11 +42,11 @@ class Caixa(pygame.sprite.Sprite):
     global Nota, no, nota, start
     if self.rect.collidepoint(mouse_pos) and self.image.get_at((0, 0)) == amarelo and start:
       self.image.fill(verde)
-      if Nota <= 99.8:
-        Nota += 0.2
+      if Nota <= 99.5:
+        Nota += 0.5
       Nota = float("{:.2f}".format(Nota))
       nota = f"nota: {Nota}/100"
-      no = fontemenor.render(nota, True, (255, 255, 255))
+      no = fontemenor.render(nota, True, (0,0,0))
 class QuadradoReset(pygame.sprite.Sprite):
   def __init__(self, x, y):
       super().__init__()
@@ -56,8 +62,8 @@ class QuadradoReset(pygame.sprite.Sprite):
           Nota -= 0.2
         Nota = float("{:.2f}".format(Nota))
         nota = f"nota: {Nota}/100"
-        no = fontemenor.render(nota, True, (255, 255, 255))
-        time.sleep(0.01)
+        no = fontemenor.render(nota, True, (0,0,0))
+        time.sleep(0.1)
 class inicio(pygame.sprite.Sprite):
   def __init__(self, x, y):
     super().__init__()
@@ -68,7 +74,7 @@ class inicio(pygame.sprite.Sprite):
     self.was_mouse_pressed = False
 
   def colidir_com_mouse(self, mouse_pos):
-    global start, faseAtual, recuperacao, caixas, nota2, Nota
+    global start, faseAtual, recuperacao, caixas, nota3, Nota, personagem, criarmesas, grupofase1, player_group
     mouse_x, mouse_y = mouse_pos
     is_mouse_pressed = pygame.mouse.get_pressed()[0]
     if self.rect.collidepoint(mouse_pos):
@@ -82,12 +88,19 @@ class inicio(pygame.sprite.Sprite):
           recuperacao = True
           caixas.empty
           caixas = create_boxes()
-          nota2 = Nota
+          nota3 = Nota
           Nota = 0
         else:
-          if nota2 < Nota:
-            nota2 = Nota
-          faseAtual = 4
+          if nota3 < Nota:
+            nota3 = Nota
+          player_group.empty()
+          player_group.add(personagem)
+          personagem.rect.x = 655
+          personagem.rect.y = 349
+          personagem.chao = 350
+          personagem.flip = True
+          criarmesas(1)
+          faseAtual = 5
       
       self.was_mouse_pressed = is_mouse_pressed
 veneno = [pygame.image.load("sprites/red.png")]
@@ -104,24 +117,27 @@ class Elementos(pygame.sprite.Sprite):
     self.rect.y += 10
     if self.rect.y > 500:
         self.kill()
-    if self.rect.y >= 300 and self.rect.y <= 350:
+    if self.rect.y >= 360 and self.rect.y <= 400:
       if self.rect.x == posicoes_iniciais[0] and pygame.key.get_pressed()[pygame.K_LEFT]:
         self.kill()
-        Nota += 1
-        nota = f"nota: {Nota}/100"
-        no = fontemenor.render(nota, True, (255, 255, 255))
+        if Nota <= 98:
+          Nota += 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (0,0,0))
 
       if self.rect.x == posicoes_iniciais[1] and pygame.key.get_pressed()[pygame.K_DOWN]:
         self.kill()
-        Nota += 1
-        nota = f"nota: {Nota}/100"
-        no = fontemenor.render(nota, True, (255, 255, 255))
+        if Nota <= 98:
+          Nota += 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (0,0,0))
 
       if self.rect.x == posicoes_iniciais[2] and pygame.key.get_pressed()[pygame.K_RIGHT]:
         self.kill()
-        Nota += 1
-        nota = f"nota: {Nota}/100"
-        no = fontemenor.render(nota, True, (255, 255, 255))
+        if Nota <= 98:
+          Nota += 2
+          nota = f"nota: {Nota}/100"
+          no = fontemenor.render(nota, True, (0,0,0))
           
 def create_boxes():
   caixas = pygame.sprite.Group()
@@ -265,31 +281,27 @@ class Veneno(pygame.sprite.Sprite):
     self.rect.y += 15
     if self.rect.y > 500:
         self.kill()
-    if self.rect.y >= 300 and self.rect.y <= 350:
+    if self.rect.y >= 360 and self.rect.y <= 400:
       if self.rect.x == posicoes_iniciais[0] and pygame.key.get_pressed()[pygame.K_LEFT]:
         self.kill()
-        if Nota >= 2:
-          Nota -= 2
+        if Nota >= 1:
+          Nota -= 1
           nota = f"nota: {Nota}/100"
-          no = fontemenor.render(nota, True, (255, 255, 255))
+          no = fontemenor.render(nota, True, (0,0,0))
 
       if self.rect.x == posicoes_iniciais[1] and pygame.key.get_pressed()[pygame.K_DOWN]:
         self.kill()
-        if Nota >= 2:
-          Nota -= 2
-          nota = f"nota: {Nota}/100"
-          no = fontemenor.render(nota, True, (255, 255, 255))
-        elif Nota >= 1:
+        if Nota >= 1:
           Nota -= 1
           nota = f"nota: {Nota}/100"
-          no = fontemenor.render(nota, True, (255, 255, 255))
+          no = fontemenor.render(nota, True, (0,0,0))
 
       if self.rect.x == posicoes_iniciais[2] and pygame.key.get_pressed()[pygame.K_RIGHT]:
         self.kill()
-        if Nota >= 2:
-          Nota -= 2
+        if Nota >= 1:
+          Nota -= 1
           nota = f"nota: {Nota}/100"
-          no = fontemenor.render(nota, True, (255, 255, 255))
+          no = fontemenor.render(nota, True, (0,0,0))
 
 class Porteiro(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -310,6 +322,31 @@ class Porteiro(pygame.sprite.Sprite):
       self.image = self.sprites[self.current_sprite]
 porteiro = Porteiro(200, 330)
 
+class Mesa(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+      super().__init__()
+      self.image = pygame.image.load('sprites/mesa1.png')
+      self.rect = self.image.get_rect()
+
+      self.rect.x = x
+      self.rect.y = y
+
+def criarmesas(a):
+  grupofase1.empty()
+  if a == 2:  
+    mesa1 = Mesa(200, 345)
+    grupofase1.add(mesa1)
+    mesa1 = Mesa(600, 346)
+    grupofase1.add(mesa1)
+  elif a == 1:
+    mesa1 = Mesa(100, 345)
+    grupofase1.add(mesa1)
+    mesa1 = Mesa(300, 344)
+    grupofase1.add(mesa1)
+    mesa1 = Mesa(550, 346)
+    grupofase1.add(mesa1)
+    
+
 class Porta(pygame.sprite.Sprite):
     def __init__(self, x, y):
       super().__init__()
@@ -328,6 +365,42 @@ class Porta(pygame.sprite.Sprite):
       self.sprites.append(pygame.image.load('sprites/porta.png'))
 porta = Porta(600, 330)
 
+comidas = [pygame.image.load("sprites/yellow.png"), pygame.image.load("sprites/green.png")]
+spombo = [pygame.image.load("sprites/yellow.png"), pygame.image.load("sprites/green.png")]
+
+class Comidas(pygame.sprite.Sprite):
+  def __init__(self):
+      super().__init__()
+      self.image = random.choice(comidas)
+      self.rect = self.image.get_rect()
+
+  def update(self):
+    global Nota, no, nota
+    self.rect.y += 10
+    if self.rect.y > 500:
+        self.kill()
+
+class Pombo(pygame.sprite.Sprite):
+  def __init__(self):
+      super().__init__()
+      self.sprites = [pygame.image.load("sprites/yellow.png"), pygame.image.load("sprites/green.png")]
+      self.current_sprite = 0
+      self.timer = 0
+      self.frame_duration = 5
+      self.image = self.sprites[self.current_sprite]
+      self.rect = self.image.get_rect()
+
+  def update(self):
+    self.rect.x += 15
+    if self.rect.y > 700:
+      self.kill()
+      
+    self.timer += 1
+    if self.timer >= self.frame_duration:
+      self.timer = 0
+      self.current_sprite = (self.current_sprite + 1) % len(self.sprites)
+      self.image = self.sprites[self.current_sprite]
+
 grupofase1 = pygame.sprite.Group()
       
 grupofase1.add(porteiro)
@@ -338,15 +411,15 @@ personagem = Jogador(0, 0)
 player_group = pygame.sprite.Group()
 player_group.add(personagem)
 
-faseAtual = 3
-Nota = 0
-current_phase = "jogo"
+faseAtual = 1
+Nota = 100
+current_phase = "menu"
 sanidade = f"sanidade: {personagem.sanidade}/100"
-san = fontemenor.render(sanidade, True, (255,255,255))
+san = fontemenor.render(sanidade, True, (0,0,0))
 dinheiro = f"dinheiro: {personagem.dinheiro}/100"
-din = fontemenor.render(dinheiro, True, (255,255,255))
+din = fontemenor.render(dinheiro, True, (0,0,0))
 nota = f"nota: {Nota}/100"
-no = fontemenor.render(nota, True, (255,255,255))
+no = fontemenor.render(nota, True, (0,0,0))
 
 # Menu
 
@@ -367,21 +440,16 @@ textocomojogar = [
 ]
 creditostexto = [
     "Desenvolvedores Principais:",
-    "Ana Beatriz - Desenvolvedor/Programador",
-    "Eduarda - Desenvolvedor/Designer",
+    "Ana Beatriz - Programador e Designer",
+    "Eduarda - Designer",
     "",
     "Arte e Design:",
-    "Eduarda - Arte, Ilustracoes e",
+    "Eduarda e Ana Beatriz - Arte, Ilustracoes e",
     "Design de Personagens",
     "",
-    "Agradecimentos Especiais:",
-    "Agradecemos a todos os nossos amigos e",
-    "professores por seu apoio e feedback", 
-    "valioso durante o desenvolvimento do jogo.",
-    "",
-    "Agradecimento ao Software e Ferramentas:",
+    "Software e Ferramentas:",
     "repl.it - Utilizada para Desenvolvimento",
-    "piskel - Utilizada para Arte/Design"
+    "piskel e ibis paint - Utilizada para Arte/Design"
 ]
 botaocredito = pygame.image.load("sprites/creditos.png")
 botaocredito_rect = botao.get_rect()
@@ -406,7 +474,7 @@ questoes = [
   '3. A radiação eletromagnética de pequeno \ncomprimento de onda, produzida quando os életrons \nem alta velocidadecolidem com uma placa defletora de Tungstênio, é chamado de:',
 ]
 respostasA = [
-  'a- Metalico, ceramico e Bobinado',
+  'a- Metalico, Ceramico e Bobinado',
   'qui V',
   'a- Sulcos são classificados como \ntransversais e cavaques como longitudinais.',
   'a- Retificador',
@@ -417,7 +485,7 @@ respostasA = [
   'a- Radiação X',
 ]
 respostasB = [
-  'b- Bobinado, Metálico e de Carvão e Bobinado',
+  'b- Metálico, Carvão e Bobinado',
   'qui F',
   'b- Sulcos são classificados como côncavos e \ncavaques como convexos.',
   'b- Amplificador',
@@ -445,7 +513,7 @@ parte = 1
 
 mouse_button_pressed = False
 
-resposta = 'quimica'
+resposta = ''
 
 fimfase = False
 
@@ -453,6 +521,7 @@ questao_atualizada = False
 
 nota1 = 0
 nota2 = 0
+nota3 = 0
 
 pos_x, pos_y = 10, 50
 pos_x2, pos_y2 = 10, 150

@@ -13,27 +13,20 @@ def colisao(jogadores, fase_atual):
       colisoes = pygame.sprite.spritecollide(jogador, fase_atual, False)
       if not colisoes:
         jogador.colidindo = False
-        jogador.velocidadeR = 10
-        jogador.velocidadeL = 10
         if not jogador.rect.y == personagem.chao:
           jogador.caindo = True
       for bloco in colisoes:
         jogador.colidindo = True
-        if isinstance(bloco, Porteiro) and not falou:
+        if isinstance(bloco, Porteiro) and not falou and var.faseAtual != 5:
           col = 'porteiro'
-        elif isinstance(bloco, Porteiro) and falou:
+        elif isinstance(bloco, Porteiro) and falou and var.faseAtual != 5:
           jogador.podemover = True
         elif isinstance(bloco, Porta):
           var.faseAtual = 2
         elif jogador.rect.y <= bloco.rect.top and jogador.caindo:
-          jogador.animate = False
+          jogador.rect.y = bloco.rect.y - 44
           jogador.pulando = False
           jogador.caindo = False
-          jogador.rect.bottom = bloco.rect.top
-        elif movimento() == 'r':
-          jogador.velocidadeR = 0
-        elif movimento() == 'l':
-          jogador.velocidadeL = 0
 
 
   if col == 'porteiro':

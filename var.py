@@ -467,10 +467,10 @@ questoes = [
   'qui 1',
   '1. Durante o processo de acabamento em \nusinagem, como são classificados os \nsulcos e os cavaques?',
   '2. Qual circuito recebe em sua entrada uma \ntensão alternada e devolve em sua saída uma \ntensão continua?',
-  'qui 2',
+  '2. Sobre a relação existente entre Kps\n e solubilidade, assinale a alternativa correta:',
   '2. Quais são os componentes obrigatórios em \num sistema pneumático?',
   '3. A partida estrela triangulo e a soft \nstarter tem como função:',
-  'qui 3',
+  '1. Qual a definição de Brix utilizados durante \nas práticas no laboratório:',
   '3. A radiação eletromagnética de pequeno \ncomprimento de onda, produzida quando os életrons \nem alta velocidadecolidem com uma placa defletora de Tungstênio, é chamado de:',
 ]
 respostasA = [
@@ -478,10 +478,10 @@ respostasA = [
   'qui V',
   'a- Sulcos são classificados como \ntransversais e cavaques como longitudinais.',
   'a- Retificador',
-  'qui F',
+  'a- Quanto maior o valor de Ksp, menor\n será a solubilidade',
   'a- Admissão, Compressão, Explosão, Escape.',
   'a- Controlar a velocidade do motor',
-  'qui V',
+  'a- Porcentagens de sólidos totais ',
   'a- Radiação X',
 ]
 respostasB = [
@@ -489,10 +489,10 @@ respostasB = [
   'qui F',
   'b- Sulcos são classificados como côncavos e \ncavaques como convexos.',
   'b- Amplificador',
-  'qui V',
+  'b) Quanto menor o valor de Kps, menor\n será a solubilidade',
   'b- fonte, elemento de sinal, elemento de \ncomando, atuador.',
   'b- Reduzir a corrente de partida do motor.',
-  'qui F',
+  'b- Quantidade de impureza em um meio',
   'b- Radiação Gama',
 ]
 questoesGerais = [

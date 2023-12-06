@@ -6,7 +6,7 @@ Este projeto é um jogo desenvolvido como parte do trabalho final da disciplina 
 
 ## Estado Atual
 
-Infelizmente, a aluna Eduarda, responsável pelo design do jogo, não pôde contribuir significativamente para o projeto. Como resultado, algumas partes do jogo relacionadas ao design não foram concluídas conforme o planejado.
+Infelizmente, não houve dialogo e compreensão entre os integrantes do grupo, impossibilitando a entrega de um possivel melho resultado.
 
 ## Como Jogar
 
